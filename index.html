@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#0b0b0d">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png" type="image/png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>ZAFFAR — The Rebirth Operating System</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+tailwind.config = { theme: { extend: {
+  colors: { void:'#0b0b0d', charcoal:'#141417', panel:'#1a1a1f', panel2:'#222228', line:'#2b2b33', gold:'#c9a962', golddim:'#8a7442', blood:'#5e1b22', blooddeep:'#3d1116' },
+  fontFamily: { serif:['"Cormorant Garamond"','serif'], sans:['Inter','sans-serif'] }
+}}};
+</script>
+<style>
+  html{background:#0b0b0d}
+  body{background:#0b0b0d;color:#e8e4dc;font-family:Inter,sans-serif;-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+  .serif{font-family:'Cormorant Garamond',serif}
+  .gold{color:#c9a962}
+  .card{background:linear-gradient(160deg,#1a1a1f 0%,#15151a 100%);border:1px solid #2b2b33;border-radius:18px;position:relative;overflow:hidden}
+  .card::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,169,98,.5),transparent)}
+  .btn-gold{background:linear-gradient(135deg,#c9a962,#a3854a);color:#141414;font-weight:600;border-radius:12px;letter-spacing:.08em}
+  .btn-gold:active{transform:scale(.97)}
+  .btn-ghost{border:1px solid #3a3a44;border-radius:12px;color:#d8d2c6}
+  .btn-ghost:active{background:#222228}
+  input,select,textarea{background:#141419!important;border:1px solid #2f2f38!important;border-radius:12px;color:#e8e4dc!important;outline:none!important;width:100%;padding:10px 14px;font-size:14px}
+  input:focus,select:focus,textarea:focus{border-color:#c9a962!important}
+  input[type=checkbox]{width:22px;height:22px;accent-color:#c9a962}
+  input[type=date],input[type=time]{color-scheme:dark}
+  ::placeholder{color:#5d5d68}
+  .fade-in{animation:fadeIn .45s ease both}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .glow{box-shadow:0 0 24px rgba(201,169,98,.18)}
+  .ring-track{stroke:#2b2b33}
+  .navbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 4px;color:#6d6d78;font-size:9px;letter-spacing:.12em}
+  .navbtn.on{color:#c9a962}
+  .navbtn svg{width:20px;height:20px}
+  .tabbar{padding-bottom:env(safe-area-inset-bottom)}
+  .splash{position:fixed;inset:0;background:radial-gradient(ellipse at 50% 30%,#3d1116 0%,#0b0b0d 65%);z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s}
+  .splash.hide{opacity:0;pointer-events:none}
+  .pulse{animation:pulse 2.4s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+  .msg-ai{border-left:2px solid #c9a962}
+  .msg-user{background:#1e1e26;border-radius:14px 14px 4px 14px}
+  .chip{border:1px solid #3a3a44;border-radius:999px;padding:5px 12px;font-size:11px;letter-spacing:.06em;white-space:nowrap}
+  .chip.on{background:#c9a962;color:#141414;border-color:#c9a962;font-weight:600}
+  .prog{height:6px;border-radius:99px;background:#26262e;overflow:hidden}
+  .prog>div{height:100%;border-radius:99px;background:linear-gradient(90deg,#8a7442,#c9a962)}
+  .toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%) translateY(20px);background:#1e1e26;border:1px solid #c9a962;color:#e8e4dc;padding:10px 20px;border-radius:12px;font-size:13px;opacity:0;transition:.35s;z-index:90;max-width:88vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .levelbar{height:10px;border-radius:99px;background:linear-gradient(90deg,#5e1b22,#c9a962)}
+  .strike{text-decoration:line-through;color:#6d6d78}
+  .hide-scroll::-webkit-scrollbar{display:none}
+  .hide-scroll{scrollbar-width:none}
+  select option{background:#1a1a1f}
+  .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);z-index:80}
+  .quote-mark{font-size:56px;line-height:0;color:#5e1b22;font-family:'Cormorant Garamond',serif}
+</style>
+</head>
+<body class="pb-24">
+
+<!-- SPLASH -->
+<div id="splash" class="splash">
+  <div class="serif gold" style="font-size:15px;letter-spacing:.55em;margin-bottom:14px;padding-left:.55em">T H E&nbsp;&nbsp;R E B I R T H</div>
+  <div class="serif" style="font-size:64px;font-weight:600;letter-spacing:.18em;line-height:1;color:#e8e4dc;padding-left:.18em">ZAFFAR</div>
+  <div style="width:64px;height:1px;background:linear-gradient(90deg,transparent,#c9a962,transparent);margin:26px 0"></div>
+  <div class="serif pulse gold" style="font-size:14px;font-style:italic;letter-spacing:.08em">Aql mein Professor. Shakhsiyat mein Berlin. Hikmat mein Mola Ali.</div>
+  <div id="splash-hint" style="position:absolute;bottom:52px;font-size:11px;color:#5d5d68;letter-spacing:.3em" class="pulse">ENTER THE SYSTEM</div>
+</div>
+
+<!-- HEADER -->
+<header class="sticky top-0 z-40 px-5 pt-5 pb-3" style="background:rgba(11,11,13,.88);backdrop-filter:blur(14px);border-bottom:1px solid #1d1d23">
+  <div class="flex items-center justify-between max-w-lg mx-auto">
+    <div>
+      <div class="serif gold" style="font-size:12px;letter-spacing:.4em">Z A F F A R</div>
+      <div id="hdr-sub" class="text-[10px] mt-0.5" style="color:#5d5d68;letter-spacing:.2em">THE REBIRTH OPERATING SYSTEM</div>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="openAI()" class="relative w-10 h-10 rounded-full flex items-center justify-center glow" style="background:linear-gradient(135deg,#5e1b22,#3d1116);border:1px solid #7a2730">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#c9a962" stroke-width="1.8"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.5"/></svg>
+      </button>
+      <button onclick="go('profile')" class="w-10 h-10 rounded-full flex items-center justify-center" style="background:#1a1a1f;border:1px solid #2b2b33">
+        <span id="hdr-initial" class="serif gold text-lg">Z</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- VIEWS -->
+<main class="px-4 max-w-lg mx-auto">
+  <div id="view-dashboard"></div>
+  <div id="view-missions" class="hidden"></div>
+  <div id="view-ai" class="hidden"></div>
+  <div id="view-neet" class="hidden"></div>
+  <div id="view-moritz" class="hidden"></div>
+  <div id="view-model" class="hidden"></div>
+  <div id="view-train" class="hidden"></div>
+  <div id="view-wisdom" class="hidden"></div>
+  <div id="view-situation" class="hidden"></div>
+  <div id="view-review" class="hidden"></div>
+  <div id="view-profile" class="hidden"></div>
+</main>
+
+<!-- MODAL -->
+<div id="modal-root"></div>
+<div id="toast" class="toast"></div>
+
+<!-- ZAFFAR MODE OVERLAY -->
+<div id="zmode" class="hidden fixed inset-0 z-[85] fade-in" style="background:radial-gradient(ellipse at 50% 20%,#3d1116 0%,#0b0b0d 70%)">
+  <div class="max-w-lg mx-auto px-6 pt-10 pb-8 h-full overflow-y-auto hide-scroll">
+    <div class="text-center">
+      <div class="serif gold" style="font-size:11px;letter-spacing:.5em;margin-bottom:10px">Z A F F A R&nbsp;&nbsp;M O D E</div>
+      <div class="serif" style="font-size:34px;font-weight:600;line-height:1.15" id="zm-title">The Mission Begins</div>
+    </div>
+    <div id="zm-body" class="mt-8 space-y-4"></div>
+    <button onclick="closeZmode()" class="btn-ghost w-full py-3 mt-8 text-sm tracking-widest">RETURN TO COMMAND CENTRE</button>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 tabbar" style="background:rgba(14,14,17,.94);backdrop-filter:blur(16px);border-top:1px solid #222228">
+  <div class="flex max-w-lg mx-auto px-1">
+    <button class="navbtn" data-nav="dashboard" onclick="go('dashboard')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l9-8 9 8v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>CENTRE</button>
+    <button class="navbtn" data-nav="missions" onclick="go('missions')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 11l3 3 8-8M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 01 2-2h11"/></svg>MISSIONS</button>
+    <button class="navbtn" data-nav="ai" onclick="go('ai')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 12a8 8 0 01-8 8H5l-2 2V12a8 8 0 018-8h2a8 8 0 018 8z"/></svg>MENTOR</button>
+    <button class="navbtn" data-nav="neet" onclick="go('neet')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19V5a2 2 0 012-2h13v16H6a2 2 0 00-2 2zm0 0a2 2 0 002 2h13"/></svg>NEET</button>
+    <button class="navbtn" data-nav="wisdom" onclick="go('wisdom')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3L2 8l10 5 10-5-10-5zM6 10.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5"/></svg>WISDOM</button>
+  </div>
+</nav>
+
+<script>
+
+/* ============ STATE & PERSISTENCE ============ */
+const LS_KEY = 'zaffar_os_v1';
+const todayStr = () => new Date().toISOString().slice(0,10);
+const defState = () => ({
+  profile: { name:'Zaffar', wake:'05:30', neetDate:'2027-05-03', level:1, joined: todayStr() },
+  habits: [], habitLog: {},   // {date: {id: true|'missed'}}
+  tests: [], mistakes: [], neet: {}, // neet: {subject: {chap: {done, pct}}}
+  weight: [], measurements: [], workouts: [], sleep: [],
+  photos: [], portfolio: {},
+  chat: [], reviews: {}, situations: [],
+  notif: {morning:true, study:true, workout:true, skincare:true, wisdom:true, evening:true},
+  customNotifs: [], levelXp: 0
+});
+let S = defState();
+try { const raw = localStorage.getItem(LS_KEY); if(raw) S = Object.assign(defState(), JSON.parse(raw)); } catch(e){}
+const save = () => { try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e){ toast('Storage full — export a backup'); } };
+
+/* ============ DATA LIBRARIES ============ */
+const LEVELS = ['The Awakening','The Disciplined','The Strategist','The Intellectual','The Charismatic','The Resilient','The Complete Zaffar'];
+const WISDOM = [
+ {t:"Knowledge is better than wealth. Knowledge guards its possessor, while wealth must be guarded. Wealth diminishes when spent; knowledge increases when shared.", src:"Attributed to Ali ibn Abi Talib — Nahj al-Balagha tradition", tag:"verified-attribution", topic:"knowledge", meaning:"What you learn becomes a permanent part of you; money can be lost, understanding cannot.", action:"Study one NEET concept deeply today — teach it to yourself out loud tonight."},
+ {t:"Patience is of two kinds: patience over what pains you, and patience against what you desire.", src:"Attributed to Ali ibn Abi Talib — Nahj al-Balagha tradition", tag:"verified-attribution", topic:"patience", meaning:"Real sabr is not only enduring hardship — it is refusing the easy pleasure that derails your mission.", action:"Identify one impulse today (phone, comfort, excuse) and outlast it by one hour."},
+ {t:"The tongue is like a lion. If you let it loose, it wounds.", src:"Attributed to Ali ibn Abi Talib — Nahj al-Balagha tradition", tag:"verified-attribution", topic:"silence", meaning:"Uncontrolled speech destroys relationships, reputation and focus faster than any enemy.", action:"Before your next conversation, pause three seconds before every reply."},
+ {t:"Do not take someone's silence as ignorance, nor their calmness as acceptance, nor their smile as consent.", src:"Attributed to Ali ibn Abi Talib", tag:"attributed", topic:"relationships", meaning:"People reveal less than they know. Observe, don't assume — in exams and in life.", action:"In one conversation today, watch more than you speak."},
+ {t:"He who knows himself knows his Lord.", src:"Attributed to Ali ibn Abi Talib — widely quoted in Islamic tradition", tag:"attributed", topic:"self-respect", meaning:"Honest self-knowledge — your flaws, fears and strengths — is the foundation of all growth.", action:"Write one true sentence about yourself tonight in the Daily Audit."},
+ {t:"A man's measure is his determination — not his wealth or lineage.", src:"Attributed to Ali ibn Abi Talib", tag:"attributed", topic:"discipline", meaning:"Your background explains you; your will defines you.", action:"Complete today's hardest mission first, before anything easy."},
+ {t:"The world is a place of passing, not a place of staying. Take from it what prepares you for the journey.", src:"Paraphrase of themes in Nahj al-Balagha", tag:"paraphrase", topic:"humility", meaning:"Marks, muscles and applause fade. Character and knowledge travel with you.", action:"Do one thing today for its own worth, not for how it looks."},
+ {t:"Courage is not the absence of fear; it is the conquest of it.", src:"Reflection inspired by teachings attributed to Ali ibn Abi Talib", tag:"reflection", topic:"courage", meaning:"The brave man feels the same fear and walks forward anyway.", action:"Name the one thing you are avoiding today. Take the first small step toward it."},
+ {t:"Justice is putting everything in its proper place.", src:"Paraphrase — attributed to Ali ibn Abi Talib", tag:"paraphrase", topic:"justice", meaning:"A just life gives each duty its right share: study its hours, body its training, soul its prayer.", action:"Audit today's schedule: is each part of your life getting what it deserves?"},
+ {t:"Your remedy is within you, yet you do not perceive it; your ailment is from yourself, yet you do not see it.", src:"Attributed to Ali ibn Abi Talib — Nahj al-Balagha, Sermon 185", tag:"verified-attribution", topic:"knowledge", meaning:"Most obstacles are internal. The solution to distraction, doubt and delay begins with self-honesty.", action:"Identify one internal obstacle today and counter it with one concrete action."},
+ {t:"Silence is the best answer to the foolish, the arrogant and the provocateur.", src:"Attributed to Ali ibn Abi Talib", tag:"attributed", topic:"silence", meaning:"Not every attack deserves a response. Composure is the highest dominance.", action:"The next time someone provokes you, respond with stillness, not speed."},
+ {t:"He who does not know his own worth will accept less than he deserves.", src:"Attributed to Ali ibn Abi Talib", tag:"attributed", topic:"self-respect", meaning:"Low self-worth shows in how you carry yourself — your posture, your standards, your yes and no.", action:"Stand tall, speak slower, and decline one thing today that lowers your standard."}
+];
+const SUBJECTS = {
+  Physics: ['Units & Measurement','Kinematics','Laws of Motion','Work, Energy & Power','Rotational Motion','Gravitation','Simple Harmonic Motion','Waves & Sound','Thermodynamics','Kinetic Theory','Ray Optics','Wave Optics','Electrostatics','Current Electricity','Magnetism','Electromagnetic Induction','Alternating Current','Modern Physics','Semiconductors'],
+  Chemistry: ['Mole Concept','Atomic Structure','Chemical Bonding','States of Matter','Thermodynamics','Chemical & Ionic Equilibrium','Redox & Electrochemistry','Chemical Kinetics','P-Block Elements','D-Block & Coordination','Metallurgy','Hydrocarbons','Haloalkanes','Alcohols & Ethers','Aldehydes & Ketones','Carboxylic Acids','Amines','Biomolecules','Polymers'],
+  Biology: ['Diversity of Life','Plant Kingdom','Animal Kingdom','Morphology of Plants','Anatomy of Plants','Cell: The Unit of Life','Cell Cycle & Division','Biomolecules','Photosynthesis','Respiration in Plants','Plant Growth & Development','Breathing & Exchange','Body Fluids & Circulation','Excretory System','Locomotion & Movement','Neural Control','Chemical Coordination','Reproduction in Organisms','Human Reproduction','Reproductive Health','Principles of Inheritance','Molecular Basis of Inheritance','Evolution','Human Health & Disease','Microbes & Biotechnology','Organisms & Populations','Ecosystem','Biotechnology Applications']
+};
+const EXERCISES = {
+  intel: [
+   {n:'Observational Walk', d:'Walk a familiar route. On return, list 10 details you never noticed before.', lvl:1},
+   {n:'The Second-Order Question', d:'Take one current problem. Ask "and then what?" five times to trace consequences.', lvl:2},
+   {n:'Logic Grid Puzzle', d:'Solve one grid logic puzzle (Einstein-style). Time yourself.', lvl:2},
+   {n:'Fermi Estimate', d:'Estimate something ungoogleable (e.g., number of students studying for NEET right now). Show your steps.', lvl:3},
+   {n:'Decision Matrix', d:'Take one real pending decision. List options × criteria, score 1–5 each, compute the answer.', lvl:2},
+   {n:'Memory Palace', d:'Memorise a 12-item list using a memory palace. Recall it after 1 hour.', lvl:2},
+   {n:'Steel-Man Exercise', d:'Argue the opposite of something you believe, as strongly as you can.', lvl:3}
+  ],
+  charisma: [
+   {n:'The Slow Reply', d:'In your next three conversations, wait 2 seconds before every answer. Notice the authority it creates.', lvl:1},
+   {n:'Story in 60 Seconds', d:'Record yourself telling a one-minute story with a clear beginning, tension and point.', lvl:2},
+   {n:'Posture Audit', d:'Set 5 hourly alarms. Each one: shoulders back, chest open, chin level, breathe.', lvl:1},
+   {n:'Voice Floor', d:'Read one paragraph aloud daily in your lowest comfortable pitch, at half your normal speed.', lvl:2},
+   {n:'The Stranger Drill', d:'Make one brief friendly exchange with someone new (shopkeeper, classmate). Exit gracefully.', lvl:3},
+   {n:'Disagreement Without Apology', d:'In one discussion, state a disagreement clearly, without "sorry" or hedging words.', lvl:2},
+   {n:'Eye Contact Ladder', d:'Hold eye contact one second longer than comfortable, in every conversation today.', lvl:2}
+  ]
+};
+const SEED_HABITS = [
+ {id:'h1', name:'Fajr & Morning Adhkar', cat:'Spiritual development', time:'05:30'},
+ {id:'h2', name:'NEET Deep Study Block (3h)', cat:'Academic excellence', time:'06:30'},
+ {id:'h3', name:'Active Recall + Revision (1h)', cat:'Academic excellence', time:'10:00'},
+ {id:'h4', name:'Workout — Project Moritz', cat:'Physical development', time:'17:00'},
+ {id:'h5', name:'Intelligence Lab Exercise', cat:'Intelligence training', time:'19:00'},
+ {id:'h6', name:'Charisma Lab Exercise', cat:'Charisma training', time:'19:20'},
+ {id:'h7', name:'Skincare & Grooming', cat:'Appearance and grooming', time:'21:30'},
+ {id:'h8', name:'Daily Audit — Nightly Review', cat:'Mental discipline', time:'22:30'},
+ {id:'h9', name:'Sleep by 23:00 (Recovery)', cat:'Physical development', time:'23:00'}
+];
+
+/* ============ HELPERS ============ */
+const $ = id => document.getElementById(id);
+const esc = s => String(s??'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const daysBetween = (a,b) => Math.round((new Date(b)-new Date(a))/864e5);
+const dateAdd = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x.toISOString().slice(0,10); };
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('show'),2600); }
+function greetWord(){ const h=new Date().getHours(); return h<5?'The night is deep':h<12?'Good morning':h<17?'Good afternoon':h<21?'Good evening':'Good night'; }
+const GREETINGS = ['Your next version is built by what you do today.','Fear none. Learn everything. Master yourself.','The man you decided to become is watching what you do now.','Discipline is choosing what you want most over what you want now.','One honest day at a time. That is the whole method.'];
+const gidx = () => parseInt(todayStr().replace(/-/g,'')) % GREETINGS.length;
+
+/* ============ SCORING ENGINE ============ */
+function habitStats(){
+  let done=0,total=0, streak=0;
+  const today = todayStr();
+  if(S.habitLog[today]) Object.values(S.habitLog[today]).forEach(v=>{ if(v===true) done++; total++; });
+  // streak = consecutive days with >=60% completion
+  let d = today;
+  if(!S.habitLog[today]) d = dateAdd(d,-1);
+  while(true){
+    const log = S.habitLog[d]; const habs = S.habitLog[d] ? Object.keys(S.habitLog[d]).length : 0;
+    if(habs===0) break;
+    const c = Object.values(log).filter(v=>v===true).length;
+    if(c/habs >= 0.6) { streak++; d = dateAdd(d,-1); } else break;
+  }
+  return {done,total,streak, score: total? Math.round(done/total*100) : 0};
+}
+function levelProgress(){
+  const days = daysBetween(S.profile.joined, todayStr())+1;
+  const ts = S.tests.length;
+  const hs = habitStats();
+  const reviews = Object.keys(S.reviews).length;
+  const xp = days*2 + ts*5 + hs.streak*3 + reviews*2;
+  const lvl = Math.min(7, 1+Math.floor(xp/40));
+  return {xp, lvl};
+}
+function neetProgress(){
+  let done=0,total=0; const subj={};
+  Object.keys(SUBJECTS).forEach(s=>{ let d=0; SUBJECTS[s].forEach(c=>{ total++; if(S.neet[s]&&S.neet[s][c]&&S.neet[s][c].pct>=70) d++; }); done+=d; subj[s]=Math.round(d/SUBJECTS[s].length*100); });
+  return {pct: total?Math.round(done/total*100):0, subj, remaining: total-done};
+}
+function weakAreas(){
+  const out=[];
+  Object.keys(SUBJECTS).forEach(s=> SUBJECTS[s].forEach(c=>{
+    const r = S.neet[s]&&S.neet[s][c];
+    if(r && r.pct>0 && r.pct<70) out.push({subj:s, chap:c, pct:r.pct});
+  }));
+  out.sort((a,b)=>a.pct-b.pct);
+  return out.slice(0,6);
+}
+
+/* ============ ROUTER ============ */
+let CUR = 'dashboard';
+function go(view){
+  if(!S.habits.length && view!=='dashboard'){} // allow all
+  CUR = view;
+  document.querySelectorAll('[id^="view-"]').forEach(v=>v.classList.add('hidden'));
+  $('view-'+view).classList.remove('hidden');
+  document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.nav===view));
+  window.scrollTo({top:0});
+  RENDER[view]();
+}
+function openAI(){ go('ai'); }
+
+/* ============ MODAL ============ */
+function openModal(html){
+  $('modal-root').innerHTML = `<div class="modal-bg" onclick="closeModal()"></div>
+  <div class="fixed bottom-0 left-0 right-0 z-[81] fade-in"><div class="max-w-lg mx-auto card rounded-b-none rounded-t-3xl p-6 max-h-[82vh] overflow-y-auto hide-scroll" style="border-bottom:none">${html}</div></div>`;
+}
+function closeModal(){ $('modal-root').innerHTML=''; }
+
+/* ============ DASHBOARD ============ */
+function ring(pct,size,label){
+  const r=(size/2)-6, c=2*Math.PI*r, off=c*(1-pct/100);
+  return `<div class="flex flex-col items-center gap-1">
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke-width="5" class="ring-track"/>
+      <circle cx="${size/2}" cy="${size/2}" r="${r}" fill="none" stroke="#c9a962" stroke-width="5" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${off}" transform="rotate(-90 ${size/2} ${size/2})" style="transition:stroke-dashoffset 1s"/>
+    </svg>
+    <div class="text-center" style="margin-top:-${size/2+14}px"><div class="serif gold" style="font-size:${size/4.2}px">${pct}%</div></div>
+    ${label?`<div class="text-[10px] mt-6" style="color:#8a8a94;letter-spacing:.15em">${label}</div>`:''}
+  </div>`;
+}
+function renderDashboard(){
+  const hs = habitStats(), np = neetProgress(), lp = levelProgress();
+  S.profile.level = lp.lvl; save();
+  const w = WISDOM[parseInt(todayStr().replace(/-/g,'')) % WISDOM.length];
+  const daysLeft = Math.max(0, daysBetween(todayStr(), S.profile.neetDate));
+  const pending = S.habits.filter(h=>!(S.habitLog[todayStr()]&&S.habitLog[todayStr()][h.id]===true));
+  const missed = Object.entries(S.habitLog[todayStr()]||{}).filter(([k,v])=>v==='missed');
+  $('view-dashboard').innerHTML = `
+  <div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.35em] mb-1">${greetWord().toUpperCase()}</div>
+    <h1 class="serif" style="font-size:32px;line-height:1.15;font-weight:600">${esc(S.profile.name)}.</h1>
+    <p class="serif italic mt-2 text-[15px]" style="color:#b8b2a6">${GREETINGS[gidx()]}</p>
+
+    <div class="card p-5 mt-6 glow">
+      <div class="flex items-center justify-between">
+        <div>
+          <div class="text-[10px] tracking-[.25em]" style="color:#8a8a94">CURRENT IDENTITY</div>
+          <div class="serif gold text-2xl mt-1">Level ${lp.lvl} — ${LEVELS[lp.lvl-1]}</div>
+          <div class="text-[11px] mt-1" style="color:#6d6d78">${lp.xp} XP · ${daysLeft} days to NEET 2027</div>
+        </div>
+        <button onclick="go('profile')" class="btn-ghost px-3 py-2 text-[11px] tracking-widest">EVOLVE</button>
+      </div>
+      <div class="prog mt-4"><div style="width:${Math.min(100,(lp.xp%40)/40*100)}%"></div></div>
+    </div>
+
+    <button onclick="enterZmode()" class="btn-gold w-full py-4 mt-4 text-sm tracking-[.25em]">⚔&nbsp; ENTER ZAFFAR MODE</button>
+
+    <div class="grid grid-cols-3 gap-3 mt-5">
+      <div class="card p-3 flex flex-col items-center">${ring(hs.score,86,'DISCIPLINE')}</div>
+      <div class="card p-3 flex flex-col items-center">${ring(np.pct,86,'NEET SYLLABUS')}</div>
+      <div class="card p-3 flex flex-col items-center">${ring(Math.min(100,hs.streak*10),86,'STREAK ×10')}</div>
+    </div>
+
+    <div class="card p-5 mt-4" onclick="go('wisdom')">
+      <div class="text-[10px] tracking-[.25em] gold mb-2">TODAY'S LESSON — MOLA ALI (A.S.)</div>
+      <div class="serif italic text-[16px] leading-relaxed">“${esc(w.t.slice(0,140))}…”</div>
+      <div class="text-[10px] mt-2" style="color:#5d5d68">${esc(w.src)} · <span class="gold">${esc(w.tag)}</span></div>
+    </div>
+
+    <div class="card p-5 mt-4">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-[10px] tracking-[.25em] gold">TODAY'S MISSIONS</div>
+        <button onclick="go('missions')" class="text-[11px] gold">ALL →</button>
+      </div>
+      ${pending.length? pending.slice(0,4).map(h=>`
+        <div class="flex items-center gap-3 py-2.5" style="border-bottom:1px solid #222228">
+          <input type="checkbox" onchange="toggleHabit('${h.id}',this.checked)">
+          <div class="flex-1"><div class="text-[13px]">${esc(h.name)}</div><div class="text-[10px]" style="color:#6d6d78">${esc(h.cat)} · ${esc(h.time||'')}</div></div>
+        </div>`).join('') : `<div class="serif italic text-center py-6" style="color:#8a8a94">All missions complete. The Disciplined identity is being earned.</div>`}
+      ${missed.length?`<div class="mt-3 text-[11px]" style="color:#b8737a">Recover ${missed.length} missed mission(s) — a miss is data, not a verdict. Tap Missions to recover.</div>`:''}
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mt-4">
+      <div class="card p-4" onclick="go('neet')">
+        <div class="text-[10px] tracking-widest" style="color:#8a8a94">NEET 2027</div>
+        <div class="serif text-3xl gold mt-1">${daysLeft}</div>
+        <div class="text-[10px]" style="color:#6d6d78">days remaining</div>
+        <div class="mt-2 text-[11px]" style="color:#b8b2a6">${np.subj.Physics}% Phy · ${np.subj.Chemistry}% Chem · ${np.subj.Biology}% Bio</div>
+      </div>
+      <div class="card p-4" onclick="go('moritz')">
+        <div class="text-[10px] tracking-widest" style="color:#8a8a94">PROJECT MORITZ</div>
+        <div class="serif text-3xl gold mt-1">${S.workouts.length}</div>
+        <div class="text-[10px]" style="color:#6d6d78">sessions logged</div>
+        <div class="mt-2 text-[11px]" style="color:#b8b2a6">${S.weight.length? 'Latest weight: '+esc(S.weight[S.weight.length-1].kg)+' kg' : 'Log first weigh-in'}</div>
+      </div>
+    </div>
+
+    <div class="card p-5 mt-4" onclick="go('neet')">
+      <div class="text-[10px] tracking-[.25em] gold mb-2">FOCUS WEAK AREAS</div>
+      ${weakAreas().slice(0,3).map(a=>`<div class="flex justify-between text-[12px] py-1.5"><span>${esc(a.chap)}</span><span style="color:#b8737a">${a.pct}%</span></div>`).join('') || '<div class="text-[12px]" style="color:#6d6d78">Log chapter practice to reveal weak areas.</div>'}
+    </div>
+  </div>`;
+}
+
+/* ============ ZAFFAR MODE ============ */
+function enterZmode(){
+  const hs = habitStats(); const next = S.habits.find(h=>!(S.habitLog[todayStr()]&&S.habitLog[todayStr()][h.id]===true));
+  $('zm-title').textContent = next ? next.name : 'All Missions Complete';
+  $('zm-body').innerHTML = `
+    <div class="card p-5"><div class="text-[10px] tracking-[.25em] gold mb-2">MINDSET</div>
+      <ul class="text-[13px] space-y-2" style="color:#cfc9bd">
+        <li>— You are not your mood. You are your decisions.</li>
+        <li>— Do the next mission at 80% effort rather than planning at 0%.</li>
+        <li>— Composure first: Professor's mind, Berlin's presence, Ali's sabr.</li>
+      </ul></div>
+    <div class="card p-5"><div class="text-[10px] tracking-[.25em] gold mb-2">IMMEDIATE NEXT ACTION</div>
+      <div class="serif text-xl">${next? esc(next.name)+' · '+esc(next.time||'now') : 'Review tonight\'s audit and sleep on time. Recovery is part of the mission.'}</div></div>
+    <div class="card p-5"><div class="text-[10px] tracking-[.25em] gold mb-2">SCORE TODAY</div>
+      <div class="serif text-3xl gold">${hs.done}/${hs.total||S.habits.length} missions</div>
+      <div class="text-[11px] mt-1" style="color:#8a8a94">${hs.score}% discipline · ${hs.streak} day streak</div></div>
+    ${next?`<button onclick="toggleHabit('${next.id}',true);enterZmode()" class="btn-gold w-full py-4 text-sm tracking-[.2em]">MISSION ACCOMPLISHED ✓</button>`:''}`;
+  $('zmode').classList.remove('hidden');
+}
+function closeZmode(){ $('zmode').classList.add('hidden'); go('dashboard'); }
+
+/* ============ MISSIONS ============ */
+function ensureHabits(){ if(!S.habits.length){ S.habits = JSON.parse(JSON.stringify(SEED_HABITS)); save(); } }
+function toggleHabit(id, val){
+  ensureHabits();
+  const d = todayStr(); S.habitLog[d] = S.habitLog[d]||{};
+  S.habitLog[d][id] = val ? true : undefined;
+  if(!val) delete S.habitLog[d][id];
+  save(); if(CUR==='dashboard') renderDashboard(); if(CUR==='missions') renderMissions();
+  if(val) toast('Mission complete. Identity earned, not given.');
+}
+function markMissed(id){
+  const d = todayStr(); S.habitLog[d] = S.habitLog[d]||{}; S.habitLog[d][id]='missed'; save(); renderMissions();
+}
+function recoverHabit(id){
+  const d = todayStr(); if(S.habitLog[d]) delete S.habitLog[d][id]; save(); renderMissions();
+  toast('Recovery accepted. One miss is data; two is a pattern. You broke the pattern.');
+}
+function habitForm(h){
+  openModal(`<div class="serif text-2xl gold mb-4">${h?'Edit':'New'} Mission</div>
+  <label class="text-[11px] tracking-widest" style="color:#8a8a94">MISSION NAME</label>
+  <input id="hf-name" class="mt-1 mb-3" value="${h?esc(h.name):''}" placeholder="e.g. NEET Deep Study Block">
+  <label class="text-[11px] tracking-widest" style="color:#8a8a94">CATEGORY</label>
+  <select id="hf-cat" class="mt-1 mb-3">${['Academic excellence','Physical development','Appearance and grooming','Intelligence training','Charisma training','Spiritual development','Mental discipline'].map(c=>`<option ${h&&h.cat===c?'selected':''}>${c}</option>`).join('')}</select>
+  <label class="text-[11px] tracking-widest" style="color:#8a8a94">SCHEDULE TIME</label>
+  <input id="hf-time" type="time" class="mt-1 mb-5" value="${h?esc(h.time||''):''}">
+  <div class="flex gap-3">
+    <button onclick="saveHabit('${h?h.id:''}')" class="btn-gold flex-1 py-3 text-sm tracking-widest">SAVE</button>
+    <button onclick="closeModal()" class="btn-ghost flex-1 py-3 text-sm tracking-widest">CANCEL</button>
+  </div>`);
+}
+function saveHabit(id){
+  const name=$('hf-name').value.trim(); if(!name) return toast('Name required');
+  const data={name, cat:$('hf-cat').value, time:$('hf-time').value};
+  if(id){ const h=S.habits.find(x=>x.id===id); Object.assign(h,data); } else S.habits.push({id:'h'+Date.now(), ...data});
+  save(); closeModal(); renderMissions(); toast('Mission saved');
+}
+function deleteHabit(id){ if(confirm('Delete this mission?')){ S.habits=S.habits.filter(h=>h.id!==id); save(); renderMissions(); } }
+
+function renderMissions(){
+  ensureHabits();
+  const d=todayStr(), log=S.habitLog[d]||{}, hs=habitStats();
+  const cats=[...new Set(S.habits.map(h=>h.cat))];
+  $('view-missions').innerHTML = `<div class="fade-in pt-6">
+    <div class="flex items-end justify-between">
+      <div><div class="text-[11px] gold tracking-[.3em]">DAILY DISCIPLINE</div>
+      <h1 class="serif text-3xl mt-1">Missions</h1></div>
+      <button onclick="habitForm()" class="btn-gold px-4 py-2 text-[11px] tracking-widest">+ NEW</button>
+    </div>
+    <div class="card p-4 mt-4 flex items-center gap-4">
+      ${ring(hs.score,72)}
+      <div><div class="serif text-xl">${hs.done} of ${hs.total} complete</div>
+      <div class="text-[11px]" style="color:#8a8a94">${hs.streak}-day consistency streak · misses are analysed, not punished</div></div>
+    </div>
+    ${cats.map(c=>`
+      <div class="mt-5 mb-2 text-[10px] tracking-[.3em]" style="color:#8a8a94">${c.toUpperCase()}</div>
+      ${S.habits.filter(h=>h.cat===c).map(h=>{
+        const st=log[h.id];
+        return `<div class="card p-4 mb-2 flex items-center gap-3">
+          <input type="checkbox" ${st===true?'checked':''} onchange="toggleHabit('${h.id}',this.checked)">
+          <div class="flex-1">
+            <div class="text-[13px] ${st===true?'strike':''}">${esc(h.name)}</div>
+            <div class="text-[10px]" style="color:#6d6d78">${esc(h.time||'anytime')} ${st==='missed'?'· <span style="color:#b8737a">missed</span>':''}</div>
+          </div>
+          ${st==='missed'?`<button onclick="recoverHabit('${h.id}')" class="text-[10px] gold border px-2 py-1 rounded-lg" style="border-color:#8a7442">RECOVER</button>`:''}
+          <button onclick="habitForm(S.habits.find(x=>x.id==='${h.id}'))" class="text-[16px] px-1" style="color:#5d5d68">✎</button>
+          <button onclick="deleteHabit('${h.id}')" class="text-[16px] px-1" style="color:#5d5d68">✕</button>
+        </div>`;}).join('')}`).join('')}
+    <div class="card p-5 mt-6" style="border-color:#3d1116">
+      <div class="text-[10px] tracking-[.25em] mb-2" style="color:#b8737a">MISSED-TASK ANALYSIS</div>
+      <p class="text-[12px] leading-relaxed" style="color:#b8b2a6">${missAnalysis()}</p>
+    </div>
+    <button onclick="go('review')" class="btn-ghost w-full py-3 mt-4 text-[12px] tracking-[.2em]">TONIGHT'S AUDIT →</button>
+  </div>`;
+}
+function missAnalysis(){
+  const counts={};
+  Object.entries(S.habitLog).forEach(([d,log])=>{ Object.entries(log).forEach(([id,v])=>{ if(v==='missed'){ const h=S.habits.find(x=>x.id===id); if(h) counts[h.cat]=(counts[h.cat]||0)+1; } }); });
+  const entries=Object.entries(counts);
+  if(!entries.length) return 'No missed missions recorded. When you do miss one, we analyse the pattern — timing, category, trigger — and rebuild the routine around it.';
+  entries.sort((a,b)=>b[1]-a[1]);
+  return `Most misses occur in <span class="gold">${esc(entries[0][0])}</span> (${entries[0][1]}×). Recommendation: shrink that mission to a 10-minute minimum version on low-energy days. Consistency of identity beats intensity of effort.`;
+}
+
+/* ============ NIGHTLY REVIEW ============ */
+const AUDIT_Q = ['Did I fulfil my academic mission?','Did I train my body or recover properly?','Did I improve my appearance and grooming?','Did I develop my mind?','Did I practise confidence and communication?','Did I follow my spiritual principles?'];
+function renderReview(){
+  const d=todayStr(), ex=S.reviews[d];
+  const hs=habitStats(); const doneHabits=S.habits.filter(h=>S.habitLog[d]&&S.habitLog[d][h.id]===true).map(h=>h.name);
+  const missedHabits=S.habits.filter(h=>S.habitLog[d]&&S.habitLog[d][h.id]==='missed').map(h=>h.name);
+  $('view-review').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">NIGHTLY REVIEW</div>
+    <h1 class="serif text-3xl mt-1">The Daily Audit</h1>
+    ${ex? `<div class="card p-5 mt-5 glow">
+      <div class="text-[10px] tracking-[.25em] gold mb-3">TODAY'S REPORT</div>
+      <div class="flex items-center gap-5"><div class="serif gold" style="font-size:44px">${ex.score}%</div>
+      <div class="text-[12px]" style="color:#b8b2a6">Discipline score<br><span class="gold">${ratingFor(ex.score)}</span></div></div>
+      <div class="mt-4 text-[12px] space-y-2">
+        <div><span class="gold">Completed:</span> ${doneHabits.map(esc).join(', ')||'—'}</div>
+        <div><span style="color:#b8737a">Missed:</span> ${missedHabits.map(esc).join(', ')||'—'}</div>
+      </div>
+      <div class="mt-4 pt-3" style="border-top:1px solid #222228">
+        <div class="text-[10px] tracking-widest mb-1" style="color:#8a8a94">HIGHLIGHT</div><div class="text-[12px]">${esc(ex.win)}</div>
+        <div class="text-[10px] tracking-widest mt-3 mb-1" style="color:#8a8a94">ATTENTION</div><div class="text-[12px]">${esc(ex.fail)}</div>
+        <div class="text-[10px] tracking-widest mt-3 mb-1 gold">TOMORROW'S PRIORITY</div><div class="serif italic text-[15px]">${esc(ex.tomorrow)}</div>
+      </div></div>`
+    : `<div class="card p-5 mt-5">
+      ${AUDIT_Q.map((q,i)=>`<div class="mb-4"><div class="text-[13px] mb-2">${q}</div>
+        <div class="flex gap-2">${['Yes','Partial','No'].map(v=>`<button class="chip" data-aq="${i}" data-v="${v}" onclick="setAudit(this)">${v}</button>`).join('')}</div></div>`).join('')}
+      <label class="text-[11px] tracking-widest" style="color:#8a8a94">WHERE DID I FAIL TODAY?</label>
+      <textarea id="rv-fail" rows="2" class="mt-1 mb-3" placeholder="One honest sentence…"></textarea>
+      <label class="text-[11px] tracking-widest" style="color:#8a8a94">WHAT WILL I IMPROVE TOMORROW?</label>
+      <textarea id="rv-tomorrow" rows="2" class="mt-1 mb-4" placeholder="One specific commitment…"></textarea>
+      <button onclick="submitReview()" class="btn-gold w-full py-3 text-sm tracking-[.2em]">GENERATE DAILY REPORT</button>
+    </div>`}
+    <div class="card p-4 mt-4 text-[11px]" style="color:#8a8a94">
+      Tonight: ${doneHabits.length} completed · ${missedHabits.length} missed · streak ${hs.streak} days
+    </div>
+  </div>`;
+}
+function setAudit(el){ el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('on')); el.classList.add('on'); }
+function submitReview(){
+  let score=0;
+  document.querySelectorAll('[data-aq]').forEach(b=>{ if(b.classList.contains('on')) score += b.dataset.v==='Yes'?16.7 : b.dataset.v==='Partial'?8 : 0; });
+  const fail=$('rv-fail').value.trim(), tomorrow=$('rv-tomorrow').value.trim();
+  if(score===0) return toast('Answer the six audit questions first');
+  const d=todayStr(); const doneHabits=S.habits.filter(h=>S.habitLog[d]&&S.habitLog[d][h.id]===true).map(h=>h.name);
+  S.reviews[d]={score:Math.round(score), fail:fail||'—', tomorrow:tomorrow||'Wake before the alarm.', win:doneHabits[0]||'Showing up for the audit itself'};
+  save(); renderReview(); toast('Audit sealed. Tomorrow starts now.');
+}
+const ratingFor = s => s>=85?'The Strategist is watching you rise.':s>=60?'Solid ground. Sharpen the edges.':'A rough day is tuition, not defeat.';
+
+/* ============ NEET COMMAND CENTRE ============ */
+let neetTab='overview', neetSubj='Physics';
+function renderNeet(){
+  const np=neetProgress(); const daysLeft=Math.max(0,daysBetween(todayStr(),S.profile.neetDate));
+  const tabs=[['overview','OVERVIEW'],['chapters','SYLLABUS'],['tests','TESTS'],['mistakes','MISTAKES']];
+  let body='';
+  if(neetTab==='overview'){
+    const avg = S.tests.length? Math.round(S.tests.reduce((a,t)=>a+t.total,0)/S.tests.length) : 0;
+    body = `
+    <div class="card p-5 glow"><div class="flex items-end justify-between">
+      <div><div class="text-[10px] tracking-[.25em] gold">COUNTDOWN</div>
+      <div class="serif gold" style="font-size:52px;line-height:1">${daysLeft}</div>
+      <div class="text-[11px]" style="color:#8a8a94">days to ${esc(S.profile.neetDate)} · NEET 2027</div></div>
+      <div class="text-right"><div class="serif text-2xl">${avg||'—'}</div><div class="text-[10px]" style="color:#8a8a94">avg score /720</div></div>
+    </div></div>
+    <div class="grid grid-cols-3 gap-3 mt-3">
+      ${Object.keys(SUBJECTS).map(s=>`<div class="card p-3 text-center"><div class="text-[10px] tracking-widest" style="color:#8a8a94">${s.slice(0,4).toUpperCase()}</div><div class="serif gold text-2xl mt-1">${np.subj[s]}%</div><div class="prog mt-2"><div style="width:${np.subj[s]}%"></div></div></div>`).join('')}
+    </div>
+    <div class="card p-5 mt-3"><div class="text-[10px] tracking-[.25em] gold mb-2">AI DIRECTIVE — STUDY NEXT</div>
+      ${studyDirective().map(x=>`<div class="flex justify-between text-[12px] py-1.5"><span>▸ ${esc(x.chap)} <span style="color:#6d6d78">(${x.subj})</span></span><span style="color:#b8737a">${x.pct}%</span></div>`).join('') || '<div class="text-[12px]" style="color:#6d6d78">Log chapter practice percentages to receive directives.</div>'}
+      <div class="mt-3 text-[11px]" style="color:#8a8a94">Method: weakest first, one chapter per block, close each with active recall.</div>
+    </div>
+    <div class="card p-5 mt-3" onclick="openTimer()">
+      <div class="flex items-center justify-between"><div><div class="text-[10px] tracking-[.25em] gold">DEEP WORK TIMER</div>
+      <div class="serif text-xl mt-1">Enter a study block</div></div><span class="gold text-xl">→</span></div></div>`;
+  } else if(neetTab==='chapters'){
+    body = `
+    <div class="flex gap-2 mb-4 overflow-x-auto hide-scroll">${Object.keys(SUBJECTS).map(s=>`<button class="chip ${s===neetSubj?'on':''}" onclick="neetSubj='${s}';renderNeet()">${s}</button>`).join('')}</div>
+    ${SUBJECTS[neetSubj].map((c,i)=>{ const r=S.neet[neetSubj]&&S.neet[neetSubj][c]; const pct=r?r.pct:0;
+      return `<div class="card p-3.5 mb-2" onclick="chapEditor('${neetSubj}','${esc(c)}')">
+        <div class="flex justify-between text-[12px]"><span class="flex-1">${i+1}. ${esc(c)}</span><span class="${pct>=70?'gold':'text-[#b8737a]'}">${pct}%</span></div>
+        <div class="prog mt-2"><div style="width:${pct}%"></div></div></div>`;}).join('')}`;
+  } else if(neetTab==='tests'){
+    body = `<button onclick="testForm()" class="btn-gold w-full py-3 mb-4 text-sm tracking-[.2em]">+ LOG MOCK TEST</button>
+    ${S.tests.slice().reverse().map((t,i)=>`<div class="card p-4 mb-2">
+      <div class="flex justify-between text-[13px]"><span>${esc(t.date)} · ${esc(t.name||'Mock Test')}</span><span class="gold serif text-lg">${t.total}/720</span></div>
+      <div class="text-[11px] mt-1" style="color:#8a8a94">Phy ${t.phy} · Chem ${t.chem} · Bio ${t.bio} · Accuracy ${t.acc}%</div>
+      <button onclick="if(confirm('Delete record?')){S.tests.splice(S.tests.indexOf(t),1);save();renderNeet()}" class="text-[10px] mt-2" style="color:#5d5d68">DELETE</button></div>`).join('') || '<div class="card p-6 text-center serif italic" style="color:#8a8a94">No tests logged. Every 720-mark paper you record makes the next one sharper.</div>'}`;
+  } else {
+    body = `<button onclick="mistakeForm()" class="btn-gold w-full py-3 mb-4 text-sm tracking-[.2em]">+ ADD MISTAKE ENTRY</button>
+    ${S.mistakes.slice().reverse().map(m=>`<div class="card p-4 mb-2">
+      <div class="text-[13px]">${esc(m.q)}</div>
+      <div class="text-[11px] mt-1" style="color:#8a8a94">${esc(m.subj)} · ${esc(m.reason)} · fix: <span class="gold">${esc(m.fix)}</span></div>
+      <button onclick="if(confirm('Remove entry?')){S.mistakes.splice(S.mistakes.indexOf(m),1);save();renderNeet()}" class="text-[10px] mt-2" style="color:#5d5d68">RESOLVED ✓</button></div>`).join('') || '<div class="card p-6 text-center serif italic" style="color:#8a8a94">A mistake written down is a mistake defeated once. Start the notebook.</div>'}`;
+  }
+  $('view-neet').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">NEET 2027 COMMAND CENTRE</div>
+    <h1 class="serif text-3xl mt-1 mb-4">Academic War Room</h1>
+    <div class="flex gap-2 mb-4 overflow-x-auto hide-scroll">${tabs.map(([k,l])=>`<button class="chip ${k===neetTab?'on':''}" onclick="neetTab='${k}';renderNeet()">${l}</button>`).join('')}</div>
+    ${body}
+  </div>`;
+}
+function studyDirective(){
+  const w=weakAreas(); if(w.length) return w.slice(0,4);
+  const todo=[]; Object.keys(SUBJECTS).forEach(s=>SUBJECTS[s].forEach(c=>{ if(!(S.neet[s]&&S.neet[s][c])) todo.push({subj:s,chap:c,pct:0}); }));
+  return todo.slice(0,4);
+}
+function chapEditor(subj,chap){
+  const cur=(S.neet[subj]&&S.neet[subj][chap])||{pct:0,notes:''};
+  openModal(`<div class="serif text-2xl gold mb-1">${esc(chap)}</div>
+  <div class="text-[11px] mb-4" style="color:#8a8a94">${subj} · mastery ≥70% = chapter secured</div>
+  <label class="text-[11px] tracking-widest" style="color:#8a8a94">MASTERY ${cur.pct}%</label>
+  <input id="ce-pct" type="range" min="0" max="100" value="${cur.pct}" class="mt-1 mb-1 w-full" style="padding:0;background:none!important;border:none!important" oninput="this.nextElementSibling.textContent=this.value+'%'">
+  <div class="serif gold text-xl mb-3">${cur.pct}%</div>
+  <label class="text-[11px] tracking-widest" style="color:#8a8a94">NOTES / REVISION PLAN</label>
+  <textarea id="ce-notes" rows="3" class="mt-1 mb-4">${esc(cur.notes||'')}</textarea>
+  <button onclick="saveChap('${subj}','${esc(chap)}')" class="btn-gold w-full py-3 text-sm tracking-widest">SAVE CHAPTER</button>`);
+}
+function saveChap(subj,chap){
+  S.neet[subj]=S.neet[subj]||{}; S.neet[subj][chap]={pct:+$('ce-pct').value, notes:$('ce-notes').value};
+  save(); closeModal(); renderNeet(); toast('Chapter progress saved');
+}
+function testForm(){
+  openModal(`<div class="serif text-2xl gold mb-4">Log Mock Test</div>
+  <input id="tf-name" class="mb-3" placeholder="Test name (e.g. Allen Mock 12)">
+  <div class="grid grid-cols-3 gap-2 mb-3">
+    <div><label class="text-[10px] tracking-widest" style="color:#8a8a94">PHY /180</label><input id="tf-phy" type="number" min="0" max="180" class="mt-1"></div>
+    <div><label class="text-[10px] tracking-widest" style="color:#8a8a94">CHEM /180</label><input id="tf-chem" type="number" min="0" max="180" class="mt-1"></div>
+    <div><label class="text-[10px] tracking-widest" style="color:#8a8a94">BIO /360</label><input id="tf-bio" type="number" min="0" max="360" class="mt-1"></div>
+  </div>
+  <input id="tf-acc" type="number" min="0" max="100" class="mb-4" placeholder="Accuracy % (attempted vs correct)">
+  <button onclick="saveTest()" class="btn-gold w-full py-3 text-sm tracking-widest">SAVE & ANALYSE</button>`);
+}
+function saveTest(){
+  const t={date:todayStr(), name:$('tf-name').value.trim(), phy:+$('tf-phy').value||0, chem:+$('tf-chem').value||0, bio:+$('tf-bio').value||0, acc:+$('tf-acc').value||0};
+  t.total=t.phy+t.chem+t.bio;
+  if(!t.total) return toast('Enter scores');
+  S.tests.push(t); save(); closeModal(); neetTab='tests'; renderNeet();
+  const weak = [['Physics',t.phy,180],['Chemistry',t.chem,180],['Biology',t.bio,360]].sort((a,b)=>(a[1]/a[2])-(b[1]/b[2]))[0];
+  toast(`Analysis: weakest — ${weak[0]} (${Math.round(weak[1]/weak[2]*100)}%). Next block goes there.`);
+}
+function mistakeForm(){
+  openModal(`<div class="serif text-2xl gold mb-4">Mistake Notebook</div>
+  <input id="mf-q" class="mb-3" placeholder="The question / concept you got wrong">
+  <select id="mf-subj" class="mb-3"><option>Physics</option><option>Chemistry</option><option>Biology</option></select>
+  <select id="mf-reason" class="mb-3"><option>Concept not clear</option><option>Silly / calculation error</option><option>Forgot during recall</option><option>Misread the question</option><option>Never studied it</option></select>
+  <input id="mf-fix" class="mb-4" placeholder="The fix — what will you do differently?">
+  <button onclick="saveMistake()" class="btn-gold w-full py-3 text-sm tracking-widest">SEAL THE LESSON</button>`);
+}
+function saveMistake(){
+  const q=$('mf-q').value.trim(); if(!q) return toast('Describe the mistake');
+  S.mistakes.push({date:todayStr(), q, subj:$('mf-subj').value, reason:$('mf-reason').value, fix:$('mf-fix').value.trim()||'Revise within 48h'});
+  save(); closeModal(); neetTab='mistakes'; renderNeet(); toast('Lesson sealed. It cannot hurt you twice.');
+}
+function openTimer(){
+  openModal(`<div class="serif text-2xl gold mb-4 text-center">Deep Work Block</div>
+  <div id="timer-face" class="serif text-center gold" style="font-size:72px">45:00</div>
+  <div class="flex justify-center gap-2 my-4">${[25,45,90].map(m=>`<button class="chip" onclick="setTimer(${m})">${m} min</button>`).join('')}</div>
+  <div class="flex gap-3">
+    <button id="timer-btn" onclick="startStopTimer()" class="btn-gold flex-1 py-3 text-sm tracking-widest">START</button>
+    <button onclick="resetTimer()" class="btn-ghost flex-1 py-3 text-sm tracking-widest">RESET</button>
+  </div>
+  <div id="timer-subject" class="mt-4"><input placeholder="What chapter are you attacking?" id="timer-chap"></div>`);
+  T = {left:45*60, run:false, iv:null};
+}
+let T=null;
+function setTimer(m){ if(!T) return; T.left=m*60; paintTimer(); }
+function paintTimer(){ const f=$('timer-face'); if(!f||!T) return; const m=String(Math.floor(T.left/60)).padStart(2,'0'), s=String(T.left%60).padStart(2,'0'); f.textContent=`${m}:${s}`; }
+function startStopTimer(){
+  if(!T) return; const b=$('timer-btn');
+  if(T.run){ clearInterval(T.iv); T.run=false; b.textContent='RESUME'; }
+  else { T.run=true; b.textContent='PAUSE';
+    T.iv=setInterval(()=>{ T.left--; paintTimer();
+      if(T.left<=0){ clearInterval(T.iv); toast('Block complete. Close with 10 minutes of active recall.'); T.run=false; if($('timer-btn'))$('timer-btn').textContent='DONE'; }
+    },1000); }
+}
+function resetTimer(){ if(T){ clearInterval(T.iv); T.left=45*60; T.run=false; paintTimer(); if($('timer-btn'))$('timer-btn').textContent='START'; } }
+
+/* ============ PROJECT MORITZ ============ */
+function renderMoritz(){
+  const w=S.weight[S.weight.length-1];
+  $('view-moritz').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">PHYSICAL TRANSFORMATION</div>
+    <h1 class="serif text-3xl mt-1">Project Moritz</h1>
+    <p class="serif italic text-[13px] mt-1" style="color:#8a8a94">Lean, athletic, proportionate. Sustainable discipline — never extremes.</p>
+
+    <div class="card p-5 mt-4 glow">
+      <div class="flex justify-between items-end mb-2">
+        <div><div class="text-[10px] tracking-[.25em] gold">TODAY'S TRAINING</div>
+        <div class="serif text-xl mt-1">${['Push — chest, shoulders, triceps','Pull — back, biceps, rear delts','Legs & core','Posture & mobility'][parseInt(todayStr().replace(/-/g,''))%4]}</div></div>
+      </div>
+      <div class="text-[11px] mb-3" style="color:#8a8a94">Shoulders & posture carry the silhouette. Core carries everything else.</div>
+      <div class="flex gap-3">
+        <button onclick="workoutLog()" class="btn-gold flex-1 py-3 text-[12px] tracking-widest">LOG SESSION</button>
+        <button onclick="measureLog()" class="btn-ghost flex-1 py-3 text-[12px] tracking-widest">MEASUREMENTS</button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3 mt-3">
+      <div class="card p-4"><div class="text-[10px] tracking-widest" style="color:#8a8a94">BODYWEIGHT</div>
+        <div class="serif gold text-3xl mt-1">${w?esc(w.kg)+' kg':'—'}</div>
+        <div class="text-[10px]" style="color:#6d6d78">${w?esc(w.date):'log your weigh-in'}</div></div>
+      <div class="card p-4"><div class="text-[10px] tracking-widest" style="color:#8a8a94">SESSIONS</div>
+        <div class="serif gold text-3xl mt-1">${S.workouts.length}</div>
+        <div class="text-[10px]" style="color:#6d6d78">progressive overload tracked</div></div>
+    </div>
+
+    ${S.weight.length>1?`<div class="card p-4 mt-3"><div class="text-[10px] tracking-widest mb-3" style="color:#8a8a94">WEIGHT TREND</div>
+      <svg width="100%" height="90" viewBox="0 0 320 90" preserveAspectRatio="none">
+      ${(()=>{const ws=S.weight.slice(-12); const mn=Math.min(...ws.map(x=>x.kg)), mx=Math.max(...ws.map(x=>x.kg)), rg=(mx-mn)||1;
+        return `<polyline fill="none" stroke="#c9a962" stroke-width="2" points="${ws.map((x,i)=>`${i/(ws.length-1)*310+5},${80-((x.kg-mn)/rg)*70}`).join(' ')}"/>`+
+          ws.map((x,i)=>`<circle cx="${i/(ws.length-1)*310+5}" cy="${80-((x.kg-mn)/rg)*70}" r="3" fill="#c9a962"/>`).join('');})()}
+      </svg></div>`:''}
+
+    <div class="card p-5 mt-3">
+      <div class="text-[10px] tracking-[.25em] gold mb-3">APPEARANCE & GROOMING</div>
+      ${[['Skincare (cleanser + moisturiser)','AM / PM',true],['Sunscreen SPF 50','Before leaving',true],['Haircare & styling','Daily'],].map((g,i)=>`
+      <div class="flex justify-between text-[12px] py-2" style="border-bottom:1px solid #222228"><span>${g[0]}</span><span style="color:#8a8a94">${g[1]||''}</span></div>`).join('')}
+      <button onclick="toast('Sunscreen reminder armed for tomorrow, 8:00 AM')" class="btn-ghost w-full py-2.5 mt-3 text-[11px] tracking-widest">SET SUNSCREEN REMINDER</button>
+    </div>
+
+    <div class="card p-4 mt-3 text-[11px] leading-relaxed" style="color:#8a8a94">
+      <span class="gold">COACH'S NOTE:</span> No crash diets, no unsafe supplements, no comparing to enhanced physiques. Sleep ${S.sleep.length?Math.round(S.sleep.reduce((a,s)=>a+s.h,0)/S.sleep.length)+'h avg':'7–8h'} weekly, protein at every meal, and add small weight to the bar only when form is clean.
+    </div>
+  </div>`;
+}
+function workoutLog(){
+  openModal(`<div class="serif text-2xl gold mb-4">Log Training Session</div>
+  <input id="wf-focus" class="mb-3" placeholder="Focus (e.g. Push — chest/shoulders/triceps)">
+  <textarea id="wf-ex" rows="3" class="mb-3" placeholder="Exercises — e.g. Bench Press 4×8 @ 60kg; OHP 3×10 @ 30kg"></textarea>
+  <input id="wf-sleep" type="number" step="0.5" min="0" max="14" class="mb-4" placeholder="Hours slept last night">
+  <button onclick="saveWorkout()" class="btn-gold w-full py-3 text-sm tracking-widest">SAVE SESSION</button>`);
+}
+function saveWorkout(){
+  const focus=$('wf-focus').value.trim(); if(!focus) return toast('Enter session focus');
+  S.workouts.push({date:todayStr(), focus, ex:$('wf-ex').value.trim(), sleep:+$('wf-sleep').value||0});
+  if(+$('wf-sleep').value) S.sleep.push({date:todayStr(), h:+$('wf-sleep').value});
+  save(); closeModal(); renderMoritz(); toast('Session logged. Progressive overload is a promise you keep weekly.');
+}
+function measureLog(){
+  const m=S.measurements[S.measurements.length-1]||{};
+  openModal(`<div class="serif text-2xl gold mb-4">Body Measurements</div>
+  ${[['Chest','cm',m.chest],['Shoulders','cm',m.shoulders],['Waist','cm',m.waist],['Arms','cm',m.arms],['Weight','kg',m.kg]].map(([l,u,v])=>`
+  <div class="mb-3"><label class="text-[10px] tracking-widest" style="color:#8a8a94">${l.toUpperCase()} (${u})</label>
+  <input id="mm-${l.toLowerCase()}" type="number" step="0.1" class="mt-1" value="${v||''}"></div>`).join('')}
+  <button onclick="saveMeasure()" class="btn-gold w-full py-3 text-sm tracking-widest">SAVE MEASUREMENTS</button>`);
+}
+function saveMeasure(){
+  const g=k=>+$(('mm-'+k).replace(' ',''))?.value||0;
+  const rec={date:todayStr(), chest:g('chest'), shoulders:g('shoulders'), waist:g('waist'), arms:g('arms'), kg:g('weight')};
+  S.measurements.push(rec); if(rec.kg) S.weight.push({date:rec.date, kg:rec.kg});
+  save(); closeModal(); renderMoritz(); toast('Measurements saved');
+}
+
+/* ============ MODEL PROJECT ============ */
+function renderModel(){
+  $('view-model').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">MODEL PROJECT</div>
+    <h1 class="serif text-3xl mt-1">The Portfolio Years</h1>
+    <p class="text-[12px] mt-1" style="color:#8a8a94">Prepared alongside medicine. Full emphasis after NEET 2027 — never before.</p>
+
+    <div class="card p-5 mt-4 glow">
+      <div class="text-[10px] tracking-[.25em] gold mb-2">PHASE STATUS</div>
+      <div class="flex items-center gap-3">
+        <div class="flex-1 prog" style="height:8px"><div style="width:${neetProgress().pct}%"></div></div>
+        <div class="text-[11px]" style="color:#8a8a94">${neetProgress().pct>=100?'NEET CLEARED — FULL THROTTLE':'Foundation until NEET'}</div>
+      </div>
+    </div>
+
+    <div class="card p-5 mt-3">
+      <div class="flex items-center justify-between mb-3"><div class="text-[10px] tracking-[.25em] gold">PORTFOLIO COLLECTIONS</div>
+      <label class="btn-ghost px-3 py-1.5 text-[10px] tracking-widest" style="cursor:pointer">+ PHOTO<input type="file" accept="image/*" class="hidden" onchange="uploadPhoto(this)"></label></div>
+      <div class="grid grid-cols-3 gap-2">
+        ${S.photos.length? S.photos.map((ph,i)=>`<div class="relative rounded-xl overflow-hidden" style="aspect-ratio:3/4;border:1px solid #2b2b33">
+          <img src="${ph.data}" class="w-full h-full object-cover">
+          <button onclick="delPhoto(${i})" class="absolute top-1 right-1 w-5 h-5 rounded-full text-[10px]" style="background:rgba(0,0,0,.7);color:#b8737a">✕</button></div>`).join('')
+        : `<div class="col-span-3 card p-6 text-center text-[11px]" style="color:#6d6d78;border-style:dashed">No portfolio images yet.<br>Monthly, same light, same pose — track the transformation.</div>`}
+      </div>
+    </div>
+
+    <div class="text-[10px] tracking-[.3em] mt-5 mb-2" style="color:#8a8a94">DEVELOPMENT TRACKS</div>
+    ${[['Camera Confidence','Weekly self-taped 60-second monologue. Watch it. Tolerate it. Improve it.',1],
+       ['Posing & Body Language','Study one editorial pose set weekly; replicate with timer.',2],
+       ['Walking Practice','10 minutes of deliberate stride — heel-to-toe, chest open, gaze forward.',1],
+       ['Facial Expression Control','Mirror drills: neutral, intensity, subtle smile on command.',2],
+       ['Fashion & Styling','Learn fit, fabric and colour. Build a capsule wardrobe slowly.',2],
+       ['Personal Branding','One thoughtful post monthly. Craft, not noise.',3],
+       ['Social Media Planning','Batch content monthly; never let it touch study blocks.',2],
+       ['Networking','After NEET: agency open calls, portfolio reviews, casting databases.',3]]
+      .map(([t,d,l])=>`<div class="card p-4 mb-2"><div class="flex justify-between"><span class="text-[13px]">${t}</span>
+      <span class="text-[10px] px-2 py-0.5 rounded-full" style="border:1px solid #8a7442;color:#c9a962">LVL ${l}</span></div>
+      <div class="text-[11px] mt-1" style="color:#8a8a94">${d}</div></div>`).join('')}
+  </div>`;
+}
+function uploadPhoto(inp){
+  const f=inp.files[0]; if(!f) return;
+  if(f.size>900000) return toast('Image too large — keep under ~900KB for on-device storage');
+  const r=new FileReader(); r.onload=e=>{ S.photos.push({date:todayStr(), data:e.target.result}); save(); renderModel(); toast('Added to portfolio'); }; r.readAsDataURL(f);
+}
+function delPhoto(i){ S.photos.splice(i,1); save(); renderModel(); }
+
+/* ============ TRAINING LABS ============ */
+let trainTab='intel';
+function renderTrain(){
+  const list=EXERCISES[trainTab];
+  const done=JSON.parse(localStorage.getItem('zaffar_train_done')||'{}');
+  $('view-train').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">DAILY TRAINING CENTRE</div>
+    <h1 class="serif text-3xl mt-1">The Laboratories</h1>
+    <div class="flex gap-2 mt-4 mb-4">
+      <button class="chip ${trainTab==='intel'?'on':''}" onclick="trainTab='intel';renderTrain()">🧠 INTELLIGENCE LAB</button>
+      <button class="chip ${trainTab==='charisma'?'on':''}" onclick="trainTab='charisma';renderTrain()">🎭 CHARISMA LAB</button>
+    </div>
+    ${list.map((e,i)=>`<div class="card p-4 mb-2">
+      <div class="flex justify-between items-center"><span class="text-[13px] font-medium">${e.n}</span>
+      <span class="text-[10px] px-2 py-0.5 rounded-full" style="border:1px solid #8a7442;color:#c9a962">LEVEL ${e.lvl}</span></div>
+      <div class="text-[12px] mt-1.5" style="color:#b8b2a6">${e.d}</div>
+      <button onclick="markTrain('${trainTab}',${i},this)" class="text-[11px] tracking-widest mt-3 px-4 py-1.5 rounded-lg" style="border:1px solid ${done[trainTab+i+todayStr()]?'#c9a962':'#3a3a44'};color:${done[trainTab+i+todayStr()]?'#c9a962':'#d8d2c6'}">${done[trainTab+i+todayStr()]?'COMPLETED TODAY ✓':'MARK COMPLETE'}</button>
+    </div>`).join('')}
+    <div class="card p-4 mt-3 text-[11px]" style="color:#8a8a94"><span class="gold">PRINCIPLE:</span> one exercise daily per lab. Difficulty rises as your completion streak grows. Capability first, confidence follows.</div>
+  </div>`;
+}
+function markTrain(tab,i,btn){
+  const done=JSON.parse(localStorage.getItem('zaffar_train_done')||'{}');
+  done[tab+i+todayStr()]=true; localStorage.setItem('zaffar_train_done',JSON.stringify(done));
+  btn.textContent='COMPLETED TODAY ✓'; btn.style.borderColor='#c9a962'; btn.style.color='#c9a962';
+  toast('Neural repetition banked.');
+}
+
+/* ============ WISDOM CORNER ============ */
+let wisdomTopic='all', wisdomSearch='';
+function renderWisdom(){
+  const w=WISDOM[parseInt(todayStr().replace(/-/g,''))%WISDOM.length];
+  const topics=['all','courage','knowledge','patience','justice','relationships','silence','self-respect','discipline','humility'];
+  let lib=WISDOM.filter(x=>wisdomTopic==='all'||x.topic===wisdomTopic);
+  if(wisdomSearch) lib=lib.filter(x=>(x.t+x.src).toLowerCase().includes(wisdomSearch.toLowerCase()));
+  $('view-wisdom').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-center mb-6">
+      <div class="serif gold" style="font-size:12px;letter-spacing:.45em">THE WISDOM OF</div>
+      <h1 class="serif text-4xl mt-1" style="font-weight:600">Mola Ali <span class="gold" style="font-size:22px">(A.S.)</span></h1>
+      <p class="serif italic text-[13px] mt-1" style="color:#8a8a94">Nahj al-Balagha tradition — every quotation honestly labelled.</p>
+    </div>
+    <div class="card p-6" style="border-color:#5e1b22">
+      <div class="quote-mark">“</div>
+      <div class="serif text-[19px] leading-relaxed -mt-3">${esc(w.t)}</div>
+      <div class="mt-4 text-[11px]" style="color:#8a8a94">Source: ${esc(w.src)} · <span class="gold">${esc(w.tag)}</span></div>
+      <div class="mt-3 pt-3" style="border-top:1px solid #2b2b33">
+        <div class="text-[12px]"><span class="gold">Meaning —</span> <span style="color:#b8b2a6">${esc(w.meaning)}</span></div>
+        <div class="text-[12px] mt-2"><span class="gold">Implement today —</span> <span style="color:#b8b2a6">${esc(w.action)}</span></div>
+        <div class="serif italic text-[14px] mt-3" style="color:#cfc9bd">Reflection: How does this teaching apply to your life right now?</div>
+      </div>
+    </div>
+    <div class="mt-5 mb-2 text-[10px] tracking-[.3em]" style="color:#8a8a94">WISDOM LIBRARY</div>
+    <input placeholder="Search the sayings…" value="${esc(wisdomSearch)}" oninput="wisdomSearch=this.value;renderWisdom();this.focus();this.setSelectionRange(this.value.length,this.value.length)">
+    <div class="flex gap-2 mt-3 mb-3 overflow-x-auto hide-scroll">${topics.map(t=>`<button class="chip ${t===wisdomTopic?'on':''}" onclick="wisdomTopic='${t}';renderWisdom()">${t}</button>`).join('')}</div>
+    ${lib.map(x=>`<div class="card p-4 mb-2"><div class="serif italic text-[15px]">“${esc(x.t)}”</div>
+      <div class="text-[10px] mt-2" style="color:#6d6d78">${esc(x.src)} · <span class="gold">${esc(x.tag)}</span> · <span style="color:#8a7442">${esc(x.topic)}</span></div></div>`).join('') || '<div class="card p-5 text-center text-[12px]" style="color:#6d6d78">No sayings match that search.</div>'}
+  </div>`;
+}
+
+/* ============ SITUATION ROOM ============ */
+function renderSituation(){
+  $('view-situation').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">THE SITUATION ROOM</div>
+    <h1 class="serif text-3xl mt-1">Three Minds. One Answer.</h1>
+    <p class="text-[12px] mt-1 mb-4" style="color:#8a8a94">Describe what you face. The Professor strategises. Berlin commands the room. Ali weighs the soul.</p>
+    <textarea id="sit-in" rows="4" placeholder="Someone disrespected me… / I am afraid of this decision… / I cannot focus on studies…"></textarea>
+    <button onclick="analyseSituation()" class="btn-gold w-full py-3.5 mt-3 text-sm tracking-[.25em]">ANALYSE FROM ALL THREE PERSPECTIVES</button>
+    <div id="sit-out" class="mt-4"></div>
+    ${S.situations.length?`<div class="mt-6"><div class="text-[10px] tracking-[.3em] mb-2" style="color:#8a8a94">PAST SITUATIONS</div>
+    ${S.situations.slice(-5).reverse().map(s=>`<div class="card p-3 mb-2 text-[11px]" style="color:#b8b2a6"><span class="gold">${esc(s.date)}</span> — ${esc(s.q.slice(0,90))}${s.q.length>90?'…':''}</div>`).join('')}</div>`:''}
+  </div>`;
+}
+function analyseSituation(){
+  const q=$('sit-in').value.trim(); if(!q) return toast('Describe the situation first');
+  const low=q.toLowerCase();
+  let theme='discipline';
+  if(/disrespect|insult|mock|laugh/.test(low)) theme='disrespect';
+  else if(/afraid|fear|scared|anxious/.test(low)) theme='fear';
+  else if(/distract|focus|study|phone/.test(low)) theme='study';
+  else if(/sad|alone|tired|give up|motivat/.test(low)) theme='low';
+  else if(/decision|confus|choose/.test(low)) theme='decision';
+  const A={
+   disrespect:{prof:`Analysis: your dignity is not under threat — your reaction is under your command. Best move: no retaliation today. Distance yourself, perform exceptionally, and let results answer the insult. Revenge is a tax on your NEET preparation.`,
+    berlin:`Protocol: pause, square your shoulders, lower your voice one register, and respond once — briefly and without a smile: "Noted." Then exit the interaction first. Composure is the loudest dominance. Never explain, never chase.`,
+    ali:`Ali (a.s.) taught: the tongue wounds like a lion when loose — keep yours leashed. Answer injustice with excellence. Your worth was never theirs to define. Guard your anger; it is a fire that burns its own house first.`,
+    act:`Do nothing for 24 hours. Complete tomorrow's study block with full focus. The answer to disrespect is a rank.`},
+   fear:{prof:`Fear is a forecast, not a fact. Write the worst case, the best case, the most likely case. The most likely is usually boring. Decide the smallest irreversible step and take it within 24 hours — momentum kills fear faster than motivation.`,
+    berlin:`Fear shrinks when posture expands: chest open, breath low, eyes level. Speak your fear aloud once, then never again — confident men narrate plans, not worries. Walk into the feared thing slowly, but walk in.`,
+    ali:`Courage is not the absence of fear; it is the conquest of it. Do the right thing while afraid — that is the whole definition of brave. What you fear losing was never fully yours; what you build with courage is.`,
+    act:`Take the smallest first step within 24 hours. Then tell the AI mentor what you did.`},
+   study:{prof:`Diagnose before treating: is it vague goals, low energy, or high friction? Cure respectively: one named chapter + one timer block; sleep and water before caffeine; phone in another room. Study the weakest chapter first while willpower is highest.`,
+    berlin:`Treat distraction like an opponent in a negotiation: give it nothing. Phone outside the room, desk cleared, one paper open. Sit down before you feel ready — discipline is posture applied to time. Ninety focused minutes beats six guilty hours.`,
+    ali:`The remedy is within you, yet you do not perceive it — the ailment is from yourself, yet you do not see it (Nahj al-Balagha tradition). Begin with one honest hour. Knowledge guards its possessor; every page is armour.`,
+    act:`One 45-minute timer on your weakest chapter, phone in another room. Start now — not tonight.`},
+   low:{prof:`Low states are physiological before they are philosophical: water, sunlight, ten minutes of movement, one completed small task. Mood follows action — act first, feel later. Tonight's audit will prove the day was not empty.`,
+    berlin:`Never negotiate with a temporary mood. Stand tall, groom well, dress sharp — the body leads the mind. One conversation, one rep, one page: identity is built on days exactly like this one.`,
+    ali:`Patience over what pains you, and patience against what you desire — both are required today. This heaviness is a test of sincerity, not a verdict on you. Pray, then move. Allah does not burden a soul beyond what it can bear (Qur'an 2:286).`,
+    act:`Complete one tiny mission now (5 minutes). Then message the mentor with one word: "done."`},
+   decision:{prof:`Define the decision in one sentence. List options. For each: reversibility, cost of being wrong, and what it teaches you regardless. Choose the option with the best worst-case — strategists optimise for regret, not for glory.`,
+    berlin:`Decide as the man you are becoming, not the boy you were. Ask: which option would Level-7 Zaffar take? Then take it fully — half-decisions are the only bad decisions.`,
+    ali:`Consult your knowledge, consult the wise, then decide with justice — putting everything in its proper place. A just decision gives each factor its right weight, then trusts Allah with the outcome.`,
+    act:`Write the one-sentence decision and your chosen option in tonight's audit.`},
+   discipline:{prof:`Missing one day is data; missing two is a pattern. Shrink the mission to a 10-minute floor for the next three days, attach it to an existing anchor (after Fajr, before dinner), and track only consistency — not intensity.`,
+    berlin:`Stop announcing, start executing. The streak is a contract with yourself — a man who breaks small contracts breaks big ones. Do today's version now, smaller if needed, but unbroken.`,
+    ali:`A man's measure is his determination. Today, win one small battle against the self — that is jihad al-nafs, the greater struggle, and it is won daily, not once.`,
+    act:`Do the 10-minute version of your most-missed mission before you sleep tonight.`}
+  }[theme];
+  S.situations.push({date:todayStr(), q, theme}); save();
+  $('sit-out').innerHTML = `
+   <div class="card p-5 mb-3"><div class="text-[10px] tracking-[.25em] gold mb-2">🎓 THE PROFESSOR — STRATEGIC</div><div class="text-[13px] leading-relaxed" style="color:#cfc9bd">${esc(A.prof)}</div></div>
+   <div class="card p-5 mb-3" style="border-color:#5e1b22"><div class="text-[10px] tracking-[.25em] mb-2" style="color:#c9a962">🎭 BERLIN — COMMAND PRESENCE</div><div class="text-[13px] leading-relaxed" style="color:#cfc9bd">${esc(A.berlin)}</div></div>
+   <div class="card p-5 mb-3" style="border-color:#8a7442"><div class="text-[10px] tracking-[.25em] gold mb-2">🕌 MOLA ALI — THE SOUL'S WEIGHT</div><div class="text-[13px] leading-relaxed" style="color:#cfc9bd">${esc(A.ali)}</div></div>
+   <div class="card p-5 glow" style="border-color:#c9a962"><div class="text-[10px] tracking-[.25em] gold mb-2">⚔ RECOMMENDED COURSE OF ACTION</div><div class="serif text-[16px]">${esc(A.act)}</div></div>`;
+  window.scrollTo({top:$('sit-out').offsetTop-80, behavior:'smooth'});
+}
+
+/* ============ ZAFFAR AI MENTOR ============ */
+let aiMode='combined';
+const MODE_META = {
+  professor:{name:'THE PROFESSOR', icon:'🎓', desc:'Logic · strategy · NEET · decisions'},
+  berlin:{name:'BERLIN', icon:'🎭', desc:'Confidence · presence · social intelligence'},
+  ali:{name:'MOLA ALI', icon:'🕌', desc:'Wisdom · sabr · courage · justice'},
+  combined:{name:'THE COUNCIL', icon:'⚔', desc:'All three minds together'}
+};
+function renderAI(){
+  $('view-ai').innerHTML = `<div class="fade-in pt-6 flex flex-col" style="height:calc(100vh - 210px)">
+    <div class="flex items-end justify-between">
+      <div><div class="text-[11px] gold tracking-[.3em]">ZAFFAR AI</div>
+      <h1 class="serif text-3xl mt-1">Your Mentor</h1></div>
+    </div>
+    <div class="flex gap-2 mt-3 mb-3 overflow-x-auto hide-scroll">
+      ${Object.keys(MODE_META).map(k=>`<button class="chip ${k===aiMode?'on':''}" onclick="aiMode='${k}';renderAI()">${MODE_META[k].icon} ${MODE_META[k].name}</button>`).join('')}
+    </div>
+    <div class="card p-3 mb-2 text-[10px]" style="color:#8a8a94">${MODE_META[aiMode].desc} · remembers your progress across sessions</div>
+    <div id="chat-box" class="flex-1 overflow-y-auto hide-scroll space-y-3 pr-1 pb-2"></div>
+    <div class="flex gap-2 pt-2">
+      <input id="chat-in" placeholder="Speak to ${MODE_META[aiMode].name}…" onkeydown="if(event.key==='Enter')sendChat()">
+      <button onclick="sendChat()" class="btn-gold px-5">➤</button>
+    </div>
+  </div>`;
+  paintChat();
+}
+function paintChat(){
+  const box=$('chat-box'); if(!box) return;
+  if(!S.chat.length){
+    box.innerHTML = `<div class="card p-4 msg-ai"><div class="text-[10px] tracking-widest gold mb-1">ZAFFAR AI</div>
+    <div class="text-[13px]" style="color:#cfc9bd">Speak. I know your streaks, your tests, your misses. Advice here is built on your data, not on quotes.</div>
+    <div class="flex gap-2 mt-3 flex-wrap">${['Plan my study day','I feel like quitting','How do I handle disrespect?','Analyse my last test','Give me a confidence drill'].map(s=>`<button class="chip" onclick="$('chat-in').value='${s}';sendChat()">${s}</button>`).join('')}</div></div>`;
+    return;
+  }
+  box.innerHTML = S.chat.slice(-60).map(m=>`
+    <div class="${m.who==='user'?'ml-8':'msg-ai pl-3'}">
+      <div class="${m.who==='user'?'msg-user p-3':'card p-3'}">
+        <div class="text-[9px] tracking-widest mb-1 ${m.who==='user'?'':'gold'}">${m.who==='user'?esc(S.profile.name).toUpperCase():esc(m.mode.toUpperCase())}</div>
+        <div class="text-[13px] leading-relaxed" style="color:#d8d2c6">${m.html}</div>
+      </div></div>`).join('');
+  box.scrollTop = box.scrollHeight;
+}
+function sendChat(){
+  const inp=$('chat-in'); const q=inp.value.trim(); if(!q) return;
+  inp.value='';
+  S.chat.push({who:'user', mode:MODE_META[aiMode].name, html:esc(q), t:Date.now()});
+  save(); paintChat();
+  setTimeout(()=>{
+    const r = mentorReply(q, aiMode);
+    S.chat.push({who:'ai', mode:MODE_META[aiMode].name, html:r, t:Date.now()});
+    save(); paintChat();
+  }, 500);
+}
+function mentorReply(q, mode){
+  const low=q.toLowerCase();
+  const hs=habitStats(), np=neetProgress(), wk=weakAreas();
+  const ctx = `Current data — discipline today: <b>${hs.score}%</b> (${hs.done}/${hs.total}), streak: <b>${hs.streak} days</b>, NEET syllabus secured: <b>${np.pct}%</b>${wk.length?`, weakest: <b>${esc(wk[0].chap)}</b> (${wk[0].pct}%)`:''}, tests logged: <b>${S.tests.length}</b>.`;
+  const sections=[];
+  if(mode==='professor'||mode==='combined') sections.push(profReply(low,ctx,hs,np,wk));
+  if(mode==='berlin'||mode==='combined') sections.push(berlinReply(low,ctx,hs));
+  if(mode==='ali'||mode==='combined') sections.push(aliReply(low,ctx,hs));
+  return sections.join('<br><br>');
+}
+function profReply(low,ctx,hs,np,wk){
+  if(/test|score|mock|analy/.test(low)){
+    if(!S.tests.length) return `<span class="gold">🎓 PROFESSOR</span><br>No test data yet — analysis needs numbers. Log your last mock in <b>NEET → Tests</b> and I will tell you exactly what to fix first.`;
+    const t=S.tests[S.tests.length-1];
+    const subs=[['Physics',t.phy,180],['Chemistry',t.chem,180],['Biology',t.bio,360]].sort((a,b)=>(a[1]/a[2])-(b[1]/b[2]));
+    return `<span class="gold">🎓 PROFESSOR</span><br>Last test: <b>${t.total}/720</b>. Weakest subject: <b>${subs[0][0]}</b> at ${Math.round(subs[0][1]/subs[0][2]*100)}%. ${ctx}<br><br>Directive: next three study blocks go to ${subs[0][0]}. Accuracy at ${t.acc}% — ${t.acc<75?'reduce attempts, increase certainty per question':'accuracy is a weapon; now raise attempt speed'}. Every mistake you log in the notebook is one the paper cannot repeat.`;
+  }
+  if(/plan|schedule|study|routine|today/.test(low)){
+    const target = wk[0]? wk[0].chap : 'your next unstarted chapter';
+    return `<span class="gold">🎓 PROFESSOR</span><br>${ctx}<br><br>Today's optimal plan: ① ${esc(target)} — one 45-min deep block now. ② Active recall close — 10 min, closed book. ③ Log the chapter percentage honestly. ④ Weakest-subject test questions ×15 before sleep. One chapter mastered beats five chapters touched.`;
+  }
+  if(/quit|give up|motivat|tired|lazy|can'?t/.test(low))
+    return `<span class="gold">🎓 PROFESSOR</span><br>Quitting is also a decision — with a guaranteed outcome. ${ctx}<br><br>Reframe: your ${hs.streak}-day streak was built on ordinary days, not heroic ones. Reduce today's load by half, but keep the chain unbroken. Consistency is a compounding asset; you are not starting over, you are protecting principal.`;
+  if(/confus|decision/.test(low))
+    return `<span class="gold">🎓 PROFESSOR</span><br>Decision protocol: write the question in one sentence. List options. For each, note reversibility and the cost of being wrong. Choose the option with the best worst-case. Then act within 24 hours — undecided options decay in value daily.`;
+  return `<span class="gold">🎓 PROFESSOR</span><br>${ctx}<br><br>Strategic read: your constraint is execution, not information. Pick the single highest-leverage action — ${wk.length?`revising <b>${esc(wk[0].chap)}</b>`:'logging your next test'} — and finish it before anything recreational. Tell me "plan my day" for a full schedule.`;
+}
+function berlinReply(low,ctx,hs){
+  if(/disrespect|insult|mock|angry|revenge/.test(low))
+    return `<span style="color:#c9a962">🎭 BERLIN</span><br>They disrespected a moment. Do not let them own your week. The response that dominates is <b>no response</b> — then outperform them at the thing that matters. Slow voice, level eyes, short sentences. Revenge is for amateurs; results are for professionals. Never cruel, never manipulated — just unshakeable.`;
+  if(/confiden|shy|afraid|scared|girl|friend|social|talk/.test(low))
+    return `<span style="color:#c9a962">🎭 BERLIN</span><br>Confidence is a rehearsal, not a gift. This week's drill: the Slow Reply — wait two seconds before every answer, shoulders back, voice one register lower. One brief exchange with a stranger daily. You will feel theatrical for ten days; on day eleven it will simply be you. Charisma is presence practised until it becomes posture.`;
+  if(/quit|give up|motivat|tired/.test(low))
+    return `<span style="color:#c9a962">🎭 BERLIN</span><br>Feelings negotiate; identity decides. You do not ask a mood for permission — you inform it of the schedule. Stand up now. Chest open, chin level. Do the next mission at 80% intensity. A man who keeps moving on ordinary days becomes unavoidable on extraordinary ones.`;
+  return `<span style="color:#c9a962">🎭 BERLIN</span><br>${ctx}<br><br>Presence note: discipline at ${hs.score}% today — carry it visibly. Groom sharp, walk slow, speak less. People believe the body before the words. Today's exercise: disagree with one person clearly, without apologising for existing.`;
+}
+function aliReply(low,ctx,hs){
+  const w=WISDOM[parseInt(todayStr().replace(/-/g,''))%WISDOM.length];
+  if(/sad|alone|cry|heart|pain|dua|pray/.test(low))
+    return `<span class="gold">🕌 MOLA ALI</span><br>Heavy heart, straight back. "Allah does not burden a soul beyond what it can bear" (Qur'an 2:286). Pain endured with sabr is not wasted — it is being weighed in your favour. Pray first, act second, speak last. And remember Ali's words: patience over what pains you, and patience against what you desire. You carry both tonight.`;
+  if(/angry|revenge|hate|disrespect/.test(low))
+    return `<span class="gold">🕌 MOLA ALI</span><br>"The tongue is like a lion — if you let it loose, it wounds" (attributed, Nahj al-Balagha tradition). Your anger is a fire; answer injustice with excellence instead. The one who wronged you cannot reach your rank — do not descend to theirs. Win quietly. Justice will keep its own ledger.`;
+  if(/quit|give up|hopeless/.test(low))
+    return `<span class="gold">🕌 MOLA ALI</span><br>"Your remedy is within you, yet you do not perceive it" (Nahj al-Balagha, Sermon 185). The despair you feel is a test of sincerity, not a measure of your worth. Do wudu, pray two units, then complete the smallest mission. Knowledge — your true wealth — guards its possessor. This night will pass; what you build in it will not.`;
+  return `<span class="gold">🕌 MOLA ALI</span><br>Today's teaching: <i>"${esc(w.t.slice(0,120))}…"</i> <span style="color:#8a8a94">(${esc(w.tag)})</span><br><br>Meaning: ${esc(w.meaning)}<br>Implement: ${esc(w.action)}<br><br>${ctx} — let the day's numbers testify for you tonight.`;
+}
+
+/* ============ PROFILE / IDENTITY / SETTINGS ============ */
+function renderProfile(){
+  const lp=levelProgress();
+  $('view-profile').innerHTML = `<div class="fade-in pt-6">
+    <div class="text-[11px] gold tracking-[.3em]">IDENTITY EVOLUTION</div>
+    <h1 class="serif text-3xl mt-1">The Seven Ascents</h1>
+    <p class="text-[12px] mt-1 mb-4" style="color:#8a8a94">Levels unlock through demonstrated consistency — audits, tests, streaks. Never through clicks.</p>
+    ${LEVELS.map((l,i)=>{
+      const n=i+1, un=n<=lp.lvl;
+      return `<div class="card p-4 mb-2 ${un?'glow':''}" style="opacity:${un?1:.45};${un?'border-color:#8a7442':''}">
+        <div class="flex items-center justify-between"><div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-full flex items-center justify-center serif ${un?'gold':'text-[#5d5d68]'}" style="border:1px solid ${un?'#c9a962':'#2b2b33'};${un?'background:#1e1a10':''}">${n}</div>
+        <div><div class="serif text-lg ${un?'gold':''}">${l}</div>
+        <div class="text-[10px]" style="color:#8a8a94">${['The decision to begin','60% consistency, first audit','First mock logged, streak of 7','10 tests + 20 audits','Charisma drills 30 days','Recovery from a real setback','The standard, embodied'][i]}</div></div></div>
+        ${un?'<span class="gold text-lg">✓</span>':''}</div></div>`;}).join('')}
+    <div class="card p-5 mt-4">
+      <div class="text-[10px] tracking-[.25em] gold mb-3">SETTINGS</div>
+      <label class="text-[11px] tracking-widest" style="color:#8a8a94">NAME</label>
+      <input id="pf-name" class="mt-1 mb-3" value="${esc(S.profile.name)}">
+      <label class="text-[11px] tracking-widest" style="color:#8a8a94">NEET 2027 EXAM DATE</label>
+      <input id="pf-neet" type="date" class="mt-1 mb-3" value="${esc(S.profile.neetDate)}">
+      <button onclick="saveProfile()" class="btn-gold w-full py-3 text-sm tracking-widest mb-5">SAVE PROFILE</button>
+      <div class="text-[10px] tracking-widest mb-2" style="color:#8a8a94">NOTIFICATIONS</div>
+      ${[['morning','Morning routine ('+esc(S.profile.wake)+')'],['study','Study blocks'],['workout','Workout'],['skincare','Skincare / sunscreen'],['wisdom','Daily spiritual lesson'],['evening','Evening audit (22:30)']].map(([k,l])=>`
+        <div class="flex justify-between items-center py-2" style="border-bottom:1px solid #222228"><span class="text-[12px]">${l}</span>
+        <input type="checkbox" ${S.notif[k]?'checked':''} onchange="S.notif['${k}']=this.checked;save();toast('Reminder ${'${k}'} '+(this.checked?'armed':'disarmed'))"></div>`).join('')}
+      <button onclick="enableNotifs()" class="btn-ghost w-full py-2.5 mt-3 text-[11px] tracking-widest">ENABLE DEVICE NOTIFICATIONS</button>
+    </div>
+    <div class="grid grid-cols-2 gap-3 mt-4">
+      <button onclick="exportData()" class="btn-ghost py-3 text-[11px] tracking-widest">⇩ EXPORT BACKUP</button>
+      <label class="btn-ghost py-3 text-[11px] tracking-widest text-center" style="cursor:pointer">⇧ IMPORT<input type="file" accept=".json" class="hidden" onchange="importData(this)"></label>
+    </div>
+    <button onclick="wipeData()" class="w-full py-3 mt-3 text-[11px] tracking-widest rounded-xl" style="border:1px solid #5e1b22;color:#b8737a">RESET SYSTEM</button>
+    <div class="text-center mt-6 mb-2 text-[10px]" style="color:#4d4d58">ZAFFAR v1.0 · data lives on this device · Fear none. Learn everything. Master yourself.</div>
+  </div>`;
+}
+function saveProfile(){ S.profile.name=$('pf-name').value.trim()||'Zaffar'; S.profile.neetDate=$('pf-neet').value||'2027-05-03'; save(); $('hdr-initial').textContent=S.profile.name[0].toUpperCase(); toast('Identity parameters saved'); }
+function exportData(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='zaffar-backup-'+todayStr()+'.json'; a.click();
+  toast('Backup exported');
+}
+function importData(inp){
+  const f=inp.files[0]; if(!f) return; const r=new FileReader();
+  r.onload=e=>{ try{ S=Object.assign(defState(),JSON.parse(e.target.result)); save(); location.reload(); }catch(err){ toast('Invalid backup file'); } };
+  r.readAsText(f);
+}
+function wipeData(){ if(confirm('Erase all progress and reset the system?')){ localStorage.removeItem(LS_KEY); location.reload(); } }
+
+/* ============ NOTIFICATIONS ============ */
+function enableNotifs(){
+  if(!('Notification' in window)) return toast('Notifications not supported here');
+  Notification.requestPermission().then(p=>{
+    toast(p==='granted'?'Device notifications armed':'Permission denied — reminders stay in-app');
+    if(p==='granted') scheduleNotifs();
+  });
+}
+function scheduleNotifs(){
+  if(!('Notification' in window) || Notification.permission!=='granted') return;
+  setInterval(()=>{
+    const now=new Date(); const hm=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+    if(S.notif.morning && hm===S.profile.wake) notify('ZAFFAR', 'Good morning. Your next version is built by what you do today.');
+    if(S.notif.study && (hm==='06:30'||hm==='14:00')) notify('ZAFFAR — Study Block', 'Enter deep work. Weakest chapter first.');
+    if(S.notif.workout && hm==='17:00') notify('PROJECT MORITZ', 'Training time. Shoulders and posture carry the silhouette.');
+    if(S.notif.skincare && hm==='21:30') notify('ZAFFAR — Grooming', 'Skincare, sunscreen check, hair. Details compound.');
+    if(S.notif.wisdom && hm==='08:00') notify('Wisdom of Mola Ali (A.S.)', 'Today\'s lesson is waiting in the Spiritual Corner.');
+    if(S.notif.evening && hm==='22:30') notify('THE DAILY AUDIT', 'Close the day honestly. Six questions await.');
+  }, 30000);
+}
+function notify(title, body){ try{ new Notification(title,{body}); }catch(e){} }
+
+/* ============ RENDER MAP & BOOT ============ */
+const RENDER = {dashboard:renderDashboard, missions:renderMissions, ai:renderAI, neet:renderNeet, moritz:renderMoritz, model:renderModel, train:renderTrain, wisdom:renderWisdom, situation:renderSituation, review:renderReview, profile:renderProfile};
+$('hdr-initial').textContent = (S.profile.name[0]||'Z').toUpperCase();
+document.querySelectorAll('.navbtn').forEach(b=>{ b.addEventListener('contextmenu',e=>e.preventDefault());
+  if(['moritz','model','train','situation','review'].includes(b.dataset.nav)) return; });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); }});
+$('splash').addEventListener('click', ()=>{ $('splash').classList.add('hide'); setTimeout(()=>$('splash').remove(),900); }, {once:true});
+setTimeout(()=>{ if($('splash')){ $('splash').classList.add('hide'); setTimeout(()=>$('splash')&&$('splash').remove(),900); } }, 4200);
+go('dashboard');
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Service worker registration failed:', err));
+  });
+}
+</script>
+</body>
+</html>
